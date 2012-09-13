@@ -1,0 +1,16 @@
+watchings:
+- - file1.copy1.txt
+  - file1.copy2.txt
+  - file1.copy3.txt
+  - file1.copy4.txt
+  - file1.copy5.txt
+- - file2.copy1.txt
+  - file2.copy2.txt
+  - file2.copy3.txt
+  - file2.copy4.txt
+  - file2.copy5.txt
+- - file3.copy1.txt
+  - file3.copy2.txt
+  - file3.copy3.txt
+  - file3.copy4.txt
+  - file3.copy5.txt

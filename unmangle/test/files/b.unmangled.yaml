@@ -1,0 +1,13 @@
+devices:
+- id: 3
+  name: '测试专用小盘(H:)'
+  type: harddisk
+  accounts:
+  - id: 2
+    type: browser-ie
+    typename: Internet Explorer
+    name: 
+    items:
+    - name: 收藏夹
+      type: favourite
+      count: 10

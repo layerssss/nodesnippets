@@ -1,0 +1,56 @@
+devices:
+#!!!result!='phone'
+- id: 3
+  name: '测试专用小盘(H:)'
+  type: harddisk
+  accounts:
+  #!!!result=='browser'
+  - id: 2
+    type: browser-ie
+    typename: Internet Explorer
+    name: 
+    items:
+    - name: 收藏夹
+      type: favourite
+      count: 10
+  #!!!result=='im'
+  - id: 2
+    type: im-qq
+    typename: QQ
+    name: 282487299
+    items:
+    - name: 联系人
+      type: contact
+      count: 10
+  #!!!result=='mail'
+  - id: 2
+    type: mailclient-foxmail
+    typename: Foxmail
+    name: tzx@qq.com
+    items:
+    - name: 联系人
+      type: contact
+      count: 10
+  #!!!result=='mail'
+  - id: 2
+    type: mailclient-netease
+    typename: 网易邮箱(WEB)
+    name: tzx@qq.com
+    items:
+    - name: 联系人
+      type: contact
+      count: 10
+
+#!!!result=='phone'
+- id: 3
+  name: '测试用Android手机'
+  type: phone
+  accounts:
+  - id: 2
+    type: phone
+    typename: 
+    name: 13726271378
+    items:
+    - name: 收藏夹
+      type: favourite
+      count: 10

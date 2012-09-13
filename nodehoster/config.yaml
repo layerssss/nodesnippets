@@ -1,0 +1,7 @@
+services:
+- cmd: 'node test_autoquiter.js'
+  option:
+    stdout: 'test_autoquiter.out.log'
+- cmd: 'node test_goodboy.js'
+  option:
+    stdout: 'test_goodboy.out.log'

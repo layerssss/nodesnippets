@@ -1,0 +1,14 @@
+items:
+- id: 2
+  timesaved: 1969-12-31 23:59:59
+  timesent: 1969-12-31 23:59:59
+  timereceived: 1969-12-31 23:59:59
+  sender: 开心网 <no-reply@kaixin001.com>
+  receiver: sutanplus@gmail.com
+  cc: tzx@qq.com
+  bcc: ttt@qq.com
+  inreplyto: sutanplus@gmail.com
+  subject: 开心网注册确认邮件
+  content: 海楼石，你好： 感谢您使用开心网！ 请点击以下注册确认链接，以完成您的注册过程： 
+
+  

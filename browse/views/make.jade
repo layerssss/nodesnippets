@@ -1,0 +1,23 @@
+extends layout
+block content
+	.well
+		h1(data-target=target)=title
+		h6 target:#{target}
+		hr
+		div.output making, please wait.....
+	:coffeescript
+		$ ()->
+			func=()->
+				$.ajax
+					dataType: 'text'
+					url: "make#{$('h1').attr('data-target')}.result.txt"
+					success:(data)->
+						$('.output').removeClass('alert-error').html(data.replace(/\x0a/g,'<br/>'))
+						if location.hash=='#go'
+							location.href=$('h1').attr('data-target')
+						else
+							setTimeout func,200
+					error:(xhr)->
+						$('.output').addClass('alert-error').html(xhr.responseText.replace(/\x0a/g,'<br/>'))
+						setTimeout func,300
+			func()

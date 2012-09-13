@@ -1,0 +1,41 @@
+extends layout
+block content
+	.row-fluid
+		.span3
+			.well
+				h2 Folders:
+				hr
+				ul.nav.nav-list
+					for file in folders
+						li.clearfix
+							a.file(href='#{file.filename}')
+								i(class=file.icon)
+								=file.filename
+		.span9
+			.well
+				h2 Files:
+				hr
+				ul.nav.nav-list
+					for file in files
+						li.clearfix
+							.btn-group.pull-left
+								a.btn.btn-mini(href=file.filename+'/view') edit
+								a.btn.btn-mini(href=file.filename.substring(0,file.filename.lastIndexOf('.'))+'?dataType=json') json
+								a.btn.btn-mini(href=file.filename.substring(0,file.filename.lastIndexOf('.'))+'?dataType=jsonp') jsonp
+							a.file(href='#{file.filename}')
+								i(class=file.icon)
+								=file.filename
+	div.readme.well(style='display:none;')
+		h1.page-header
+		.content.smaller
+	:coffeescript
+		showreadme=(readme,filename)->
+			r=$('.readme').show()
+			r.find('h1').html filename
+			r.find('.content').html((new Showdown.converter()).makeHtml(readme))
+		$.get 'README.txt',(data)->
+			showreadme(data,'README.md')
+		$.get 'README.md',(data)->
+			showreadme(data,'README.md')
+		$.get 'README',(data)->
+			showreadme(data,'README')

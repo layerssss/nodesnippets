@@ -1,0 +1,67 @@
+{
+  "stats": {
+    "suites": 9,
+    "tests": 5,
+    "passes": 5,
+    "pending": 0,
+    "failures": 0,
+    "start": "2012-08-15T09:29:31.808Z",
+    "end": "2012-08-15T09:29:31.811Z",
+    "duration": 3
+  },
+  "tests": [
+    {
+      "title": "should be a good JS",
+      "fullTitle": "result.js should be a good JS",
+      "duration": 1
+    },
+    {
+      "title": "should contains good info",
+      "fullTitle": "result.js jsfunction() should contains good info",
+      "duration": 0
+    },
+    {
+      "title": "should contains good info",
+      "fullTitle": "result.js icedfunction() should contains good info",
+      "duration": 0
+    },
+    {
+      "title": "should contains good info",
+      "fullTitle": "result.js folder.text should contains good info",
+      "duration": 0
+    },
+    {
+      "title": "should contains good info",
+      "fullTitle": "result.js data.json should contains good info",
+      "duration": 0
+    }
+  ],
+  "failures": [],
+  "passes": [
+    {
+      "title": "should be a good JS",
+      "fullTitle": "result.js should be a good JS",
+      "duration": 1
+    },
+    {
+      "title": "should contains good info",
+      "fullTitle": "result.js jsfunction() should contains good info",
+      "duration": 0
+    },
+    {
+      "title": "should contains good info",
+      "fullTitle": "result.js icedfunction() should contains good info",
+      "duration": 0
+    },
+    {
+      "title": "should contains good info",
+      "fullTitle": "result.js folder.text should contains good info",
+      "duration": 0
+    },
+    {
+      "title": "should contains good info",
+      "fullTitle": "result.js data.json should contains good info",
+      "duration": 0
+    }
+  ]
+}
