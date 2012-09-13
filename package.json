@@ -1,0 +1,27 @@
+{
+  "name": "nodesnippets",
+  "description": "nodesnippets mea",
+  "keywords": [
+    "javascript",
+    "nodejs"
+  ],
+  "author": {
+    "name": "Michael Yin"
+  },
+  "version": "0.1",
+  "engines": {
+    "node": ">=0.8.1"
+  },
+  "dependencies": {
+    "coffee-script":"latest",
+    "connect-gzip":"latest",
+    "express":"latest",
+    "http-proxy":"latest",
+    "iced-coffee-script":"latest",
+    "jade":"latest",
+    "js-yaml":"latest",
+    "less":"latest",
+    "mocha":"latest",
+    "node-minify":"latest"
+  }
+}
