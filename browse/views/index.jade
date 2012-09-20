@@ -1,7 +1,7 @@
 extends layout
 block content
 	.row-fluid
-		.span3
+		.span2
 			.well
 				h2 Folders:
 				hr
@@ -11,7 +11,7 @@ block content
 							a.file(href='#{file.filename}')
 								i(class=file.icon)
 								=file.filename
-		.span9
+		.span4
 			.well
 				h2 Files:
 				hr
@@ -25,17 +25,26 @@ block content
 							a.file(href='#{file.filename}')
 								i(class=file.icon)
 								=file.filename
-	div.readme.well(style='display:none;')
-		h1.page-header
-		.content.smaller
+		.span6
+			div.readme.well
+				h1.page-header
+				.content.smaller loading README...
 	:coffeescript
-		showreadme=(readme,filename)->
-			r=$('.readme').show()
-			r.find('h1').html filename
-			r.find('.content').html((new Showdown.converter()).makeHtml(readme))
-		$.get 'README.txt',(data)->
-			showreadme(data,'README.md')
-		$.get 'README.md',(data)->
-			showreadme(data,'README.md')
-		$.get 'README',(data)->
-			showreadme(data,'README')
+		showreadme=(filename,cb)->
+			$.ajax 
+				url:filename,
+				success:(readme)->
+					r=$('.readme')
+					r.find('h1').html filename
+					r.find('.content').html((new Showdown.converter()).makeHtml(readme))
+				error:->
+					cb()
+		showreadme 'README',->
+			showreadme 'README.md',->
+				showreadme 'README.txt',->
+					showreadme 'README.markdown',->
+						showreadme 'Readme',->
+							showreadme 'Readme.md',->
+								showreadme 'Readme.txt',->
+									showreadme 'Readme.markdown',->
+										r=$('.readme').find('.content').text('no README...')
