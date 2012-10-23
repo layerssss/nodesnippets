@@ -1,7 +1,7 @@
-require 'js-yaml'
+yaml=require 'js-yaml'
 cp=require 'child_process'
-cfg=require process.argv[2]||'./config.yaml'
 fs=require 'fs'
+cfg=yaml.load fs.readFileSync process.argv[2]||'./config.yaml','utf8'
 exiting=false
 exited=0
 processes=cfg.services.map (service,i)->
