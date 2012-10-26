@@ -71,4 +71,4 @@ exports.make=require('./make').make;
 exports.data=require('./data').data;
 exports.edit=require('./edit').edit;
 exports.view=require('./view').view;
-exports.renderhtml=require('./renderhtml').renderhtml;
+exports.upload=require('./upload').upload;

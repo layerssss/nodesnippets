@@ -37,13 +37,12 @@ app.configure('production', function(){
 });
 
 // Routes
-
-app.get('/renderhtml/', routes.renderhtml);
 app.get('*/', routes.index);
 app.get('*', routes.data);
 app.get('*/make*.result.txt', routes.makeresult);
 app.get('*/edit', routes.edit);
 app.post('*/edit', routes.edit);
+app.post('*/upload', routes.upload);
 app.get('*/view', routes.view);
 app.get('*/make*', routes.make);
 app.get('*.jsonp/[^\.]+',function(req,res,next){

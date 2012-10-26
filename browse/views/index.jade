@@ -25,6 +25,9 @@ block content
 							a.file(href='#{file.filename}')
 								i(class=file.icon)
 								=file.filename
+				form(enctype='multipart/form-data',method='post',action='./upload')
+					input(type='file',name='file',multiple='multiple')
+					input(type='submit',value='upload')
 		.span6
 			div.readme.well
 				h1.page-header
