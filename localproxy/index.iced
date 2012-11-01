@@ -19,7 +19,7 @@ server=httpProxy.createServer (req, res, proxy)->
 		path=cfg.defaultPath+path
 	for config in cfg.hosts
 		matched=req.url.match "/#{config.alias}/(.*)"
-		if matched
+		if matched&&matched.index==0
 			[host,port]=[cfg.defaultHost,cfg.defaultPort]
 			path=cfg.defaultPath+matched[1]
 			if config.host? then host=config.host
