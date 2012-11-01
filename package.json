@@ -21,8 +21,6 @@
     "jade":"latest",
     "js-yaml":"latest",
     "less":"latest",
-    "mocha":"latest",
-    "node-minify":"latest",
-    "formidable":"latest"
+    "mocha":"latest"
   }
 }
