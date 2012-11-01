@@ -6,16 +6,6 @@ exports.index = (req,res)->
 	console.log(curPath);
 	arr=req.params[0].split('/');
 	link='';
-	breadcrumb=[{
-		text:'Browse',
-		link:'/'
-	}];
-	for i in [0..arr.length-1]
-		if arr[i]!=''
-			link+='/'+arr[i]
-			breadcrumb[breadcrumb.length]=
-				text:arr[i]
-				link:link
 	await fs.readdir curPath,defer(error,files)
 	if error?
 		console.error error
@@ -63,12 +53,6 @@ exports.index = (req,res)->
 		files:files.filter (file)->file.stat.isFile()
 		folders:files.filter (file)->file.stat.isDirectory()
 		dir:req.params[0],
-		breadcrumb:breadcrumb
-		nav:
-			index:'active'
-exports.makeresult=require('./makeresult').makeresult;
-exports.make=require('./make').make;
-exports.data=require('./data').data;
 exports.edit=require('./edit').edit;
 exports.view=require('./view').view;
 exports.upload=require('./upload').upload;

@@ -6,7 +6,7 @@
   __iced_k = __iced_k_noop = function() {};
 
   exports.index = function(req, res) {
-    var arr, breadcrumb, curPath, err, error, files, fs, i, link, path, priv, root, ___iced_passed_deferral, __iced_deferrals, __iced_k, _i, _ref,
+    var arr, curPath, err, error, files, fs, link, path, priv, root, ___iced_passed_deferral, __iced_deferrals, __iced_k,
       _this = this;
     __iced_k = __iced_k_noop;
     ___iced_passed_deferral = iced.findDeferral(arguments);
@@ -17,21 +17,6 @@
     console.log(curPath);
     arr = req.params[0].split('/');
     link = '';
-    breadcrumb = [
-      {
-        text: 'Browse',
-        link: '/'
-      }
-    ];
-    for (i = _i = 0, _ref = arr.length - 1; 0 <= _ref ? _i <= _ref : _i >= _ref; i = 0 <= _ref ? ++_i : --_i) {
-      if (arr[i] !== '') {
-        link += '/' + arr[i];
-        breadcrumb[breadcrumb.length] = {
-          text: arr[i],
-          link: link
-        };
-      }
-    }
     (function(__iced_k) {
       __iced_deferrals = new iced.Deferrals(__iced_k, {
         parent: ___iced_passed_deferral,
@@ -45,7 +30,7 @@
             return files = arguments[1];
           };
         })(),
-        lineno: 18
+        lineno: 8
       }));
       __iced_deferrals._fulfill();
     })(function() {
@@ -70,16 +55,16 @@
               return priv = arguments[1];
             };
           })(),
-          lineno: 27
+          lineno: 17
         }));
         __iced_deferrals._fulfill();
       })(function() {
         files = files.map(function(file) {
-          var ext, line, obj, stat, _j, _len, _ref1;
+          var ext, line, obj, stat, _i, _len, _ref;
           if (typeof priv !== "undefined" && priv !== null) {
-            _ref1 = priv.split('\n');
-            for (_j = 0, _len = _ref1.length; _j < _len; _j++) {
-              line = _ref1[_j];
+            _ref = priv.split('\n');
+            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+              line = _ref[_i];
               if (file.match(line) && file.match(line)[0].length === file.length) {
                 return null;
               }
@@ -125,21 +110,11 @@
           folders: files.filter(function(file) {
             return file.stat.isDirectory();
           }),
-          dir: req.params[0],
-          breadcrumb: breadcrumb,
-          nav: {
-            index: 'active'
-          }
+          dir: req.params[0]
         });
       });
     });
   };
-
-  exports.makeresult = require('./makeresult').makeresult;
-
-  exports.make = require('./make').make;
-
-  exports.data = require('./data').data;
 
   exports.edit = require('./edit').edit;
 

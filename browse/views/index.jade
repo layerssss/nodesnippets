@@ -1,34 +1,24 @@
 extends layout
 block content
 	.row-fluid
-		.span2
-			.well
-				h2 Folders:
-				hr
-				ul.nav.nav-list
-					for file in folders
-						li.clearfix
-							a.file(href='#{file.filename}/')
-								i(class=file.icon)
-								=file.filename
-		.span4
-			.well
-				h2 Files:
-				hr
-				ul.nav.nav-list
-					for file in files
-						li.clearfix
-							.btn-group.pull-left
-								a.btn.btn-mini(href=file.filename+'/view') edit
-								a.btn.btn-mini(href=file.filename.substring(0,file.filename.lastIndexOf('.'))+'?dataType=json') json
-								a.btn.btn-mini(href=file.filename.substring(0,file.filename.lastIndexOf('.'))+'?dataType=jsonp') jsonp
-							a.file(href='#{file.filename}')
-								i(class=file.icon)
-								=file.filename
-				form(enctype='multipart/form-data',method='post',action='./upload')
-					input(type='file',name='file',multiple='multiple')
-					input(type='submit',value='upload')
-		.span6
+		.span12
+			ul.nav.nav-list
+				for file in folders
+					li.clearfix
+						a.file(href='#{file.filename}/')
+							i(class=file.icon)
+							=file.filename
+				for file in files
+					li.clearfix
+						.btn-group.pull-right
+							a.btn.btn-mini(href=file.filename+'/') edit
+						a.file(href='#{file.filename}')
+							i(class=file.icon)
+							=file.filename
+			form(enctype='multipart/form-data',method='post',action='./upload')
+				input(type='file',name='file',multiple='multiple')
+				input(type='submit',value='upload')
+		.span4(style='display:none;')
 			div.readme.well
 				h1.page-header
 				.content.smaller loading README...
@@ -40,6 +30,7 @@ block content
 					r=$('.readme')
 					r.find('h1').html filename
 					r.find('.content').html((new Showdown.converter()).makeHtml(readme))
+					r.closest('.span4').show().prev().toggleClass('span12 span8')
 				error:->
 					cb()
 		showreadme 'README',->

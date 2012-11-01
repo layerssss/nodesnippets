@@ -8,19 +8,35 @@ html
 		script(src='/layerssss.github.com/js/ace/ace.js')
 		script(src='/layerssss.github.com/js/bootstrap.js')
 		script(src='/layerssss.github.com/js/showdown.js')
-	body
-		.navbar.navbar-fixed-top
-			.navbar-inner
-				.container-fluid
-					ul.nav
-						li(class=nav.index)
-							a(href='./') Browse
-						li(class=nav.make)
-							a(href='./make') MakeStatus
-		div.container-fluid(style='margin-top:60px;')
-			ul.breadcrumb
-				for crumb in breadcrumb
-					li
-						a(href='#{crumb.link}') #{crumb.text}
-						span.divider /
+		:less
+			[class^="icon-"],[class*=" icon-"]{
+				display:inline;
+				margin-right:0.2em;
+				vertical-align:inherit;
+				background-image:none;
+				line-height:inherit;
+				height:auto;
+				width:auto;
+			}
+	body(style='padding-top:50px;')
+		.container-fluid
+			.navbar.navbar-fixed-top
+				.navbar-inner
+					.container-fluid
+						ul.nav#nav
 			block content
+			:coffeescript
+				[dummy,protocal,segs]=location.href.match /(https?:\/\/)([^\?#]*)/
+				segs=segs.split '/'
+				for seg,i in segs
+					if seg.length
+						if !i
+							$("""
+								<a class="brand" href="#{protocal}#{seg}"><i class="icon-home-2"/>#{protocal}#{seg}</a>
+								""").insertBefore('#nav')
+						else
+							$("""
+								<li>
+									<a href="#{protocal}#{segs.slice(0,i+1).join('/')}/"><i class="icon-folder-2"/>#{seg}</a>
+								<li>
+								""").appendTo('#nav')

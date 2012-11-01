@@ -36,7 +36,7 @@ block content
 					$('body>.container-fluid').css('margin-top','0')
 					$('#editor').css('top',Number($('#editor').css('top').replace(/px$/,''))-110)
 					$('body').css('background-color','whiteSmoke')
-				filename=location.href.substring(0,location.href.length-5)
+				filename=location.href.substring(0,location.href.lastIndexOf('/'))
 				$.ajax
 					url:filename+'?_t='+Math.floor(Math.random()*1000)
 					dataType:'text'
