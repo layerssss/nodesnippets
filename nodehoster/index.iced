@@ -29,13 +29,16 @@ processes=cfg.services.map (service,i)->
 	process.on 'exit',pexit
 	process.sync=[service.option,service.cmd,i]
 	process
-process.on 'SIGTERM',->
-	exiting=true
-	for process in processes
-		if !process.exited
-			try
-				process.kill 15
-			catch e
-	setTimeout (->
-		process.exit 1
-		),5000
+try
+	process.on 'SIGTERM',->
+		exiting=true
+		for process in processes
+			if !process.exited
+				try
+					process.kill 15
+				catch e
+		setTimeout (->
+			process.exit 1
+			),5000
+catch e
+  console.log 'dumb!'
