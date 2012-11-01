@@ -59,8 +59,8 @@ exports.register=(app)->
 
 
   app.get "*/",(req,res,next)->
-    path=app.cfg.root+'/'+req.params[0]
-    if !fs.existsSync(path)||!fs.statSync(path).isFile()
+    folder=app.cfg.root+'/'+req.params[0]
+    if !fs.existsSync(folder)||!fs.statSync(folder).isFile()
       return next()
     arr=req.params[0].split('/')
     link=''
