@@ -1,23 +1,24 @@
+
 extends layout
 block content
+	mixin writefile(file,edit)
+		li.clearfix(style='position:relative;')
+			if edit
+				.btn-group(style='position:absolute;top:5px;right:5px;')
+					a.btn.btn-mini(href=file.filename+'/') edit
+			a.thumbnail(href='#{file.filename}/',style='width:120px;height:150px;')
+				i(class=file.icon,style='font-size:120px;line-height:1.2;margin:0 auto;')
+			span.label.label-info(style='position:absolute;bottom:5px;right:5px;')=file.filename
 	.row-fluid
 		.span12
-			ul.nav.nav-list
+			ul.thumbnails
 				for file in folders
-					li.clearfix
-						a.file(href='#{file.filename}/')
-							i(class=file.icon)
-							=file.filename
+					mixin writefile(file,false)
 				for file in files
-					li.clearfix
-						.btn-group.pull-right
-							a.btn.btn-mini(href=file.filename+'/') edit
-						a.file(href='#{file.filename}')
-							i(class=file.icon)
-							=file.filename
-			form(enctype='multipart/form-data',method='post',action='./upload')
-				input(type='file',name='file',multiple='multiple')
-				input(type='submit',value='upload')
+					mixin writefile(file,true)
+			//- form(enctype='multipart/form-data',method='post',action='./upload')
+			//- 	input(type='file',name='file',multiple='multiple')
+			//- 	input(type='submit',value='upload')
 		.span4(style='display:none;')
 			div.readme.well
 				h1.page-header
