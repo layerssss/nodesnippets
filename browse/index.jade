@@ -1,21 +1,17 @@
 
 extends layout
 block content
-	mixin writefile(file,edit)
-		li.clearfix(style='position:relative;')
-			if edit
-				.btn-group(style='position:absolute;top:5px;right:5px;')
-					a.btn.btn-mini(href=file.filename+'/') edit
-			a.thumbnail(href='#{file.filename}/',style='width:120px;height:150px;')
-				i(class=file.icon,style='font-size:120px;line-height:1.2;margin:0 auto;')
-			span.label.label-info(style='position:absolute;bottom:5px;right:5px;')=file.filename
 	.row-fluid
 		.span12
 			ul.thumbnails
-				for file in folders
-					mixin writefile(file,false)
 				for file in files
-					mixin writefile(file,true)
+					li.clearfix(style='position:relative;')
+						if file.isFile()
+							.btn-group(style='position:absolute;top:5px;right:5px;')
+								a.btn.btn-mini(href=file.filename+'/') edit
+						a.thumbnail(href=file.link,style='width:120px;height:150px;')
+							i(class=file.icon,style='font-size:120px;line-height:1.2;margin:0 auto;')
+						span.label.label-info(style='position:absolute;bottom:5px;right:5px;')=file.filename
 			//- form(enctype='multipart/form-data',method='post',action='./upload')
 			//- 	input(type='file',name='file',multiple='multiple')
 			//- 	input(type='submit',value='upload')

@@ -17,6 +17,7 @@ app.configure ->
       ctype = res.getHeader("Content-Type")
       ctype? and ctype.match(/json|text|javascript/)?
   app.use express.static(app.cfg.root)
+  app.use express.static(__dirname+'/assets')
 
 app.configure "development", ->
   app.use express.errorHandler
