@@ -27,6 +27,21 @@ html
 				.navbar-inner
 					.container-fluid
 						ul.nav#nav
+						ul.nav.pull-right
+							if typeof(user)!='undefined'
+								li
+									a(href='#')
+										i.icon-user
+										=user.username
+								li
+									a(href='logout')
+										i.icon-locked
+										|logout
+							else
+								li
+									a(href='login')
+										i.icon-key
+										|login
 			block content
 			:coffeescript
 				[dummy,protocal,segs]=location.href.match /(https?:\/\/)([^\?#]*)/

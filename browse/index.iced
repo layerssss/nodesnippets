@@ -1,6 +1,6 @@
 express = require("express")
 path = require("path")
-app = module.exports = express.createServer()
+app = express();
 
 app.cfg=
   port: Number(process.argv[2])
@@ -40,4 +40,3 @@ app.get "*.json/[^.]+", (req, res, next) ->
 
 app.listen app.cfg.port, ->
   console.log "Express server listening"
-  console.log app.cfg

@@ -3,19 +3,23 @@ extends layout
 block content
 	.row-fluid
 		.span12
-			ul.thumbnails
-				for file in files
+			ul.thumbnails.clearfix
+				for file in specials
 					li.clearfix(style='position:relative;')
-						if file.isFile()
-							.btn-group(style='position:absolute;top:5px;right:5px;')
-								a.btn.btn-mini(href=file.filename+'/') edit
 						a.thumbnail(href=file.link,style='width:120px;height:150px;')
 							i(class=file.icon,style='font-size:120px;line-height:1.2;margin:0 auto;')
 						span.label.label-info(style='position:absolute;bottom:5px;right:5px;')=file.filename
-			//- form(enctype='multipart/form-data',method='post',action='./upload')
-			//- 	input(type='file',name='file',multiple='multiple')
-			//- 	input(type='submit',value='upload')
-		.span4(style='display:none;')
+			ul.nav
+				for file in files
+					li.clearfix(style='position:relative;')
+						a(href=file.link)
+							i(class=file.icon)
+							=file.filename
+			if isEditor
+				form(enctype='multipart/form-data',method='post',action='./upload')
+					input(type='file',name='file',multiple='multiple')
+					input(type='submit',value='upload')
+		.span6(style='display:none;')
 			div.readme.well
 				h1.page-header
 				.content.smaller loading README...
@@ -27,7 +31,7 @@ block content
 					r=$('.readme')
 					r.find('h1').html filename
 					r.find('.content').html((new Showdown.converter()).makeHtml(readme))
-					r.closest('.span4').show().prev().toggleClass('span12 span8')
+					r.closest('.span6').show().prev().toggleClass('span12 span6')
 				error:->
 					cb()
 		showreadme 'README',->
