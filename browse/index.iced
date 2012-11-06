@@ -2,6 +2,11 @@ express = require("express")
 path = require("path")
 app = express();
 
+if process.argv.length!=4
+  console.error 'Usage: iced browse PORT PATH'
+  process.exit(1)
+  return
+
 app.cfg=
   port: Number(process.argv[2])
   root: path.resolve(process.argv[3]).replace(/\/$/,'')
@@ -17,7 +22,7 @@ app.configure ->
       ctype = res.getHeader("Content-Type")
       ctype? and ctype.match(/json|text|javascript/)?
   app.use express.static(app.cfg.root)
-  app.use express.static(__dirname+'/assets')
+  app.use express.static(__dirname+path.sep+'assets')
 
 app.configure "development", ->
   app.use express.errorHandler

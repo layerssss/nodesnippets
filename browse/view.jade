@@ -37,45 +37,49 @@ block content
 					$('#editor').css('top',Number($('#editor').css('top').replace(/px$/,''))-110)
 					$('body').css('background-color','whiteSmoke')
 				filename=location.href.substring(0,location.href.lastIndexOf('/'))
+				loadFile=(data)->
+					$('.source-filename').text(filename).attr('data-filename',filename)
+					source=$('.source-showcase')
+					source.show()
+					editor = ace.edit("editor")
+					session=editor.getSession()
+
+					editor.setTheme("ace/theme/twilight");
+
+					mode=filename
+					mode=mode.substring(mode.lastIndexOf('/')+1)
+					mode=mode.substring(mode.lastIndexOf('.')+1)
+					modes=
+						js:'javascript'
+						iced:'coffee'
+						README:'markdown'
+						md:'markdown'
+						cs:'csharp'
+					mode=modes[mode]||mode
+					$('.source-mode').text mode
+					session.setValue ''
+					session.setMode("ace/mode/"+mode);
+					session.setValue data
+					func=()->
+						$.ajax
+							url:filename+'/edit'
+							dataType:'text'
+							success:()->
+								$('.source-showcase .btn').removeClass 'disabled'
+								$('.source-msg').hide()
+								setTimeout func,300
+							error:(xhr)->
+								$('.source-showcase .btn').addClass 'disabled'
+								$('.source-msg').show().children().text xhr.responseText
+								setTimeout func,300
+					func()
 				$.ajax
 					url:filename+'?_t='+Math.floor(Math.random()*1000)
 					dataType:'text'
 					success:(data)->
-						$('.source-filename').text(filename).attr('data-filename',filename)
-						source=$('.source-showcase')
-						source.show()
-						editor = ace.edit("editor")
-						session=editor.getSession()
-
-						editor.setTheme("ace/theme/twilight");
-
-						mode=filename
-						mode=mode.substring(mode.lastIndexOf('/')+1)
-						mode=mode.substring(mode.lastIndexOf('.')+1)
-						modes=
-							js:'javascript'
-							iced:'coffee'
-							README:'markdown'
-							md:'markdown'
-							cs:'csharp'
-						mode=modes[mode]||mode
-						$('.source-mode').text mode
-						session.setValue ''
-						session.setMode("ace/mode/"+mode);
-						session.setValue data
-						func=()->
-							$.ajax
-								url:filename+'/edit'
-								dataType:'text'
-								success:()->
-									$('.source-showcase .btn').removeClass 'disabled'
-									$('.source-msg').hide()
-									setTimeout func,300
-								error:(xhr)->
-									$('.source-showcase .btn').addClass 'disabled'
-									$('.source-msg').show().children().text xhr.responseText
-									setTimeout func,300
-						func()
+						loadFile(data)
+					error:(data)->
+						loadFile('')
 				$('.source-save').click ()->
 					filename=$(this).closest('.source-showcase').find('.source-filename').attr('data-filename')
 					editor = ace.edit("editor")

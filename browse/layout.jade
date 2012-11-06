@@ -28,6 +28,10 @@ html
 					.container-fluid
 						ul.nav#nav
 						ul.nav.pull-right
+							li
+								a(href='README')
+									i.icon-help
+									|README
 							if typeof(user)!='undefined'
 								li
 									a(href='#')
@@ -45,7 +49,7 @@ html
 			block content
 			:coffeescript
 				[dummy,protocal,segs]=location.href.match /(https?:\/\/)([^\?#]*)/
-				segs=segs.split '/'
+				segs=segs.substring(0,segs.lastIndexOf('/')+1).split '/'
 				for seg,i in segs
 					if seg.length
 						if !i

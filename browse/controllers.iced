@@ -3,15 +3,16 @@ fs=require('fs')
 path=require('path')
 url=require 'url'
 jsyaml=require 'js-yaml'
-
+showdown=require('showdown')
 
 defaultConfig=
   users:[]
 
 exports.register=(app)->
-  await fs.readFile app.cfg.root+'/.browse.config.yaml','utf8',defer err,config
-  config= if err? then defaultConfig else jsyaml.load config
-
+  config=defaultConfig
+  try
+    config=jsyaml.load fs.readFileSync app.cfg.root+'/.browse.config.yaml','utf8'
+  catch e
 
   app.all "*",(req,res,next)->
     res.locals.path=req.path.substring 0,req.path.lastIndexOf('/')+1
@@ -38,29 +39,28 @@ exports.register=(app)->
       p=path.dirname p
     next()
 
-
-
+  preciousKeys=['private','bigicon']
+  propertyKeys=['icon','name']
   app.all "*/",(req,res,next)->
     res.locals.title="Browse - #{res.locals.path}"
-    if !fs.existsSync(res.locals.resolved)
-      return next()
-    if fs.statSync(res.locals.resolved).isFile()
+    if !fs.existsSync(res.locals.resolved)||fs.statSync(res.locals.resolved).isFile()
       res.render 'view'
-    if fs.statSync(res.locals.resolved).isDirectory()
+        title: "View - #{res.locals.path}"
+    else
       await fs.readdir res.locals.resolved,defer(error,files)
-      await fs.readFile res.locals.resolved+'/.privates','utf8',defer err,privates
+
+      precious={}
+      for key in preciousKeys
+        await fs.readFile res.locals.resolved+"/.#{key}s",'utf8',defer err,precious[key]
+        if precious[key]?
+          precious[key]=precious[key].split '\n'
+        else
+          precious[key]=[]
       files2=[]
       for file in files
-        # if privates?
-        #   isPrivate=false
-        #   for line in privates.split '\n'
-        #     if file.match(line)&&file.match(line)[0].length==file.length
-        #       isPrivate=true
-        #   if isPrivate
-        #     continue
         stat=fs.statSync res.locals.resolved+'/'+file
         obj=stat
-        obj.filename=file
+        obj.name=file
         obj.icon='icon-folder-2'
         obj.link=file
 
@@ -69,42 +69,71 @@ exports.register=(app)->
           ext=path.extname file
           if ext in ['.yaml','.xml']
             obj.icon='icon-file-xml'
-            obj.link+='/'
+            obj.link="#{file}/"
           if ext in ['.html','.htm']
             obj.icon='icon-html5-2'
           if ext in ['.gz','.tar','.rar','.zip','.msi','.pkg','.exe','.deb']
             obj.icon='icon-file-zip'
           if ext in ['.sass','.css','.less','.coffee','.iced','.js','.json']
             obj.icon='icon-file-css'
-            obj.link+='/'
-          if ext in ['.md','.txt','.log','.config','.php','.rb','.jade','.aspx','.java','.cs','.c']
-            obj.link+='/'
+            obj.link="#{file}/"
+          if ext in ['.txt','.log','.config','.php','.rb','.jade','.aspx','.java','.cs','.c']
+            obj.link="#{file}/"
+          if ext in ['.md','.markdown'] or file.toLowerCase() in ['readme','readme.txt']
+            obj.icon='icon-file-2'
+            obj.link="#{file}/markdown"
         else
-          await fs.readFile res.locals.resolved+'/'+file+'/.special','utf8',defer err,obj.special
-
-          if obj.special?
-            obj.special=JSON.parse obj.special
+          for k in propertyKeys
+            await fs.readFile res.locals.resolved+path.sep+file+path.sep+".#{k}",'utf8',defer err,v
+            if v?
+              obj[k]=v
           obj.link+='/'
+
+
+        for key,list of precious
+          obj["is#{key}"]=false
+          for line in list
+            matching=file.match(new RegExp(line.trim()))
+            if matching?&&matching[0].length==file.length
+              obj["is#{key}"]=true
+
+
         files2.push obj
 
-      files=files2.filter (file)->file!=null&&file.filename[0]!='.'&&!file.filename.match /~$/
+      files=files2.filter (file)->file!=null&&file.name[0]!='.'&&!file.name.match(/~$/)&&!file.isprivate
+      console.log files
 
 
-
-
-      # files=files.sort (a,b)->
-      #   if a.isFile()&&b.isDirectory()
-      #     return 1
-      #   if a.isDirectory&&b.isFile()
-      #     return -1
-      #   if a.filename<b.filename
-      #     return -1
-      #   if a.filename==b.filename
-      #     return 0
-      #   return 1
+      files=files.sort (a,b)->
+        if a.isFile()&&b.isDirectory()
+          return 1
+        if a.isDirectory&&b.isFile()
+          return -1
+        if a.name<b.name
+          return -1
+        if a.name==b.name
+          return 0
+        return 1
       res.render 'index',
-        files:files.filter (f)->!f.special?
-        specials:files.filter (f)->f.special?
+        title: "Browse - #{res.locals.path}"
+        files:files
+
+  
+  converter=new showdown.converter()
+  app.get '*/markdown',(req,res,next)->
+    res.locals.title="Markdown - #{res.locals.path}"
+    if !fs.existsSync(res.locals.resolved)||fs.statSync(res.locals.resolved).isFile()
+      res.render 'markdown'
+        html: converter.makeHtml fs.readFileSync res.locals.resolved,'utf8'
+        file: path.basename res.locals.resolved
+    else
+      next()
+
+  app.get '*/README',(req,res,next)->
+    res.locals.title="README"
+    res.render 'markdown'
+      html: converter.makeHtml fs.readFileSync __dirname+'/README','utf8'
+      file: null
 
 
   app.post '*/upload',(req,res,next)->
@@ -139,10 +168,8 @@ exports.register=(app)->
       res.write "Permission denied."
       return res.end()
     p=app.cfg.root+'/'+req.params[0]
-    p=path.dirname p
     res.setHeader 'Content-Type','text/plain; charset=utf-8'
     try
-      p+='/'+path.basename(req.params[0])
       if req.body&&req.body.content
         fs.writeFileSync p,req.body.content,'utf8'
         if err

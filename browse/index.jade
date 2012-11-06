@@ -4,17 +4,19 @@ block content
 	.row-fluid
 		.span12
 			ul.thumbnails.clearfix
-				for file in specials
-					li.clearfix(style='position:relative;')
-						a.thumbnail(href=file.link,style='width:120px;height:150px;')
-							i(class=file.icon,style='font-size:120px;line-height:1.2;margin:0 auto;')
-						span.label.label-info(style='position:absolute;bottom:5px;right:5px;')=file.filename
+				for file in files
+					if file.isbigicon
+						li.clearfix(style='position:relative;')
+							a.thumbnail(href=file.link,style='width:120px;height:150px;',title=file.name)
+								i(class=file.icon,style='font-size:120px;line-height:1.2;margin:0 auto;')
+							span.label.label-info(style='position:absolute;bottom:5px;right:5px;')=file.name
 			ul.nav
 				for file in files
-					li.clearfix(style='position:relative;')
-						a(href=file.link)
-							i(class=file.icon)
-							=file.filename
+					if !file.isbigicon
+						li.clearfix(style='position:relative;')
+							a(href=file.link,title=file.name)
+								i(class=file.icon)
+								=file.name
 			if isEditor
 				form(enctype='multipart/form-data',method='post',action='./upload')
 					input(type='file',name='file',multiple='multiple')

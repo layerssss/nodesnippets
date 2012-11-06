@@ -1,0 +1,38 @@
+browse
+=============================
+
+It's just a simple web server.
+
+##Installation and usage.
+
+    npm install
+    sudo npm install iced -g
+    iced index.iced 80 ~/
+    #serving files from your home path (~/)
+
+
+
+##Features
+
+###Hide private files/directories
+
+Put regex patterns in [.privates](.privates/) file.
+
+###Setup users as editors
+
+Edit [.browse.config.yaml](/.browse.config.yaml) file in root path.
+
+Example:
+
+    users:
+    - username: admin
+      password: admin123
+
+###Use a big icon for folder
+
+Edit [.special](.special/) file in that folder. 
+
+Example: [view all available icons..](/css/icomoon/index.html)
+
+    icon-cloud 
+    
