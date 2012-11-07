@@ -1,64 +1,61 @@
 !!!
 html
-	head
-		title= title
-		link(rel='stylesheet',href='/css/bootstrap.css')
-		link(rel='stylesheet',href='/css/icomoon/style.css')
-		script(src='/js/jquery.js')
-		script(src='/js/ace/ace.js')
-		script(src='/js/bootstrap.js')
-		script(src='/js/showdown.js')
-		:less
-			[class^="icon-"],[class*=" icon-"]{
-				display:inline;
-				margin-right:0.2em;
-				vertical-align:inherit;
-				background-image:none;
-				line-height:inherit;
-				height:auto;
-				width:auto;
-			}
-			a:hover{
-				text-decoration:none;
-			}
-	body(style='padding-top:50px;')
-		.container-fluid
-			.navbar.navbar-fixed-top
-				.navbar-inner
-					.container-fluid
-						ul.nav#nav
-						ul.nav.pull-right
-							if typeof(user)!='undefined'
-								li
-									a(href='README')
-										i.icon-help
-										|README
-								li
-									a(href='#')
-										i.icon-user
-										=user.username
-								li
-									a(href='logout')
-										i.icon-locked
-										|logout
-							else
-								li
-									a(href='login')
-										i.icon-key
-										|login
-			block content
-			:coffeescript
-				[dummy,protocal,segs]=location.href.match /(https?:\/\/)([^\?#]*)/
-				segs=segs.substring(0,segs.lastIndexOf('/')+1).split '/'
-				for seg,i in segs
-					if seg.length
-						if !i
-							$("""
-								<a class="brand" href="#{protocal}#{seg}"><i class="icon-home-2"/>#{seg}</a>
-								""").insertBefore('#nav')
-						else
-							$("""
-								<li>
-									<a href="#{protocal}#{segs.slice(0,i+1).join('/')}/"><i class="icon-folder-2"/>#{seg}</a>
-								<li>
-								""").appendTo('#nav')
+  head
+    meta(http-equiv='Content-Type',content='text/html;charset=UTF-8')
+    meta(charset='utf-8')
+    title= title
+    link(rel='stylesheet',href='/css/bootstrap.css')
+    link(rel='stylesheet',href='/css/icomoon/style.css')
+    script(src='/js/jquery.js')
+    script(src='/js/ace/ace.js')
+    script(src='/js/bootstrap.js')
+    script(src='/js/showdown.js')
+    :less
+      [class^="icon-"],[class*=" icon-"]{
+        display:inline;
+        margin-right:0.2em;
+        vertical-align:inherit;
+        background-image:none;
+        line-height:inherit;
+        height:auto;
+        width:auto;
+      }
+      a:hover{
+        text-decoration:none;
+      }
+  body(style='padding-top:50px;')
+    .container-fluid
+      .navbar.navbar-fixed-top
+        .navbar-inner
+          .container-fluid
+            ul.nav#nav
+            ul.nav.pull-right
+              if typeof(user)!='undefined'
+                li
+                  a(href='browse_README')
+                    i.icon-help
+                    |README
+                li
+                  a(href='#')
+                    i.icon-user
+                    =user.username
+                li
+                  a(href='browse_logout')
+                    i.icon-locked
+                    |logout
+              else
+                li
+                  a(href='browse_login')
+                    i.icon-key
+                    |login
+      block content
+      :coffeescript
+        [dummy,protocal,segs]=location.href.match /(https?:\/\/)([^\?#]*)/
+        segs=segs.substring(0,segs.lastIndexOf('/')).split '/'
+        for seg,i in segs
+          console.log segs
+          if seg.length
+            if !i
+              $('<a class="brand" href="'+protocal+seg+'"><i class="icon-home-2"/>'+seg+'</a>').insertBefore('#nav')
+            else
+              $('<li><a href="'+protocal+segs.slice(0,i+1).join('/')+'"><i class="icon-folder-2"/>'+seg+'</a><li>').appendTo('#nav')

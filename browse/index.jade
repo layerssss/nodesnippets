@@ -1,47 +1,46 @@
 
 extends layout
 block content
-	.row-fluid
-		.span12
-			ul.thumbnails.clearfix
-				for file in files
-					if file.isbigicon
-						li.clearfix(style='position:relative;')
-							a.thumbnail(href=file.link,style='width:120px;height:150px;',title=file.name)
-								i(class=file.icon,style='font-size:120px;line-height:1.2;margin:0 auto;')
-							span.label.label-info(style='position:absolute;bottom:5px;right:5px;')=file.name
-			ul.nav
-				for file in files
-					if !file.isbigicon
-						li.clearfix(style='position:relative;')
-							a(href=file.link,title=file.name)
-								i(class=file.icon)
-								=file.name
-			if isEditor
-				form(enctype='multipart/form-data',method='post',action='./upload')
-					input(type='file',name='file',multiple='multiple')
-					input(type='submit',value='upload')
-		.span6(style='display:none;')
-			div.readme.well
-				h1.page-header
-				.content.smaller loading README...
-	:coffeescript
-		showreadme=(filename,cb)->
-			$.ajax 
-				url:filename,
-				success:(readme)->
-					r=$('.readme')
-					r.find('h1').html filename
-					r.find('.content').html((new Showdown.converter()).makeHtml(readme))
-					r.closest('.span6').show().prev().toggleClass('span12 span6')
-				error:->
-					cb()
-		showreadme 'README',->
-			showreadme 'README.md',->
-				showreadme 'README.txt',->
-					showreadme 'README.markdown',->
-						showreadme 'Readme',->
-							showreadme 'Readme.md',->
-								showreadme 'Readme.txt',->
-									showreadme 'Readme.markdown',->
-										r=$('.readme').find('.content').text('no README...')
+  .row-fluid
+    .span12
+      ul.thumbnails.clearfix
+        for file in files
+          if file.isbigicon
+            li.clearfix(style='position:relative;')
+              a.thumbnail(href=file.link,style='width:120px;height:150px;',title=file.name)
+                i(class=file.icon,style='font-size:120px;line-height:1.2;margin:0 auto;')
+              span.label.label-info(style='position:absolute;bottom:5px;right:5px;')=file.name
+      ul.nav
+        for file in files
+          if !file.isbigicon
+            li.clearfix(style='position:relative;')
+              a(href=file.link,title=file.name)
+                i(class=file.icon)
+                =file.name
+      if isEditor
+        form(enctype='multipart/form-data',method='post',action='./upload')
+          input(type='file',name='file',multiple='multiple')
+          input(type='submit',value='upload')
+    .span6(style='display:none;')
+      div.readme.well
+        h1.page-header
+        .content.smaller loading README...
+  :coffeescript
+    showreadme=(filename,cb)->
+      $.ajax 
+        url:filename,
+        success:(readme)->
+          r=$('.readme')
+          r.find('h1').html filename
+          r.find('.content').html((new Showdown.converter()).makeHtml(readme))
+          r.closest('.span6').show().prev().toggleClass('span12 span6')
+        error:->
+          cb()
+    showreadme 'README',->
+      showreadme 'README.md',->
+        showreadme 'README.txt',->
+          showreadme 'README.markdown',->
+            showreadme 'Readme',->
+              showreadme 'Readme.md',->
+                showreadme 'Readme.txt',->
+                  showreadme 'Readme.markdown',->

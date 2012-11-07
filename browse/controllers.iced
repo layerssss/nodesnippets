@@ -81,7 +81,7 @@ exports.register=(app)->
             obj.link="#{file}/"
           if ext in ['.md','.markdown'] or file.toLowerCase() in ['readme','readme.txt']
             obj.icon='icon-file-2'
-            obj.link="#{file}/markdown"
+            obj.link="#{file}/browse_markdown"
         else
           for k in propertyKeys
             await fs.readFile res.locals.resolved+path.sep+file+path.sep+".#{k}",'utf8',defer err,v
@@ -120,7 +120,7 @@ exports.register=(app)->
 
   
   converter=new showdown.converter()
-  app.get '*/markdown',(req,res,next)->
+  app.get '*/browse_markdown',(req,res,next)->
     res.locals.title="Markdown - #{res.locals.path}"
     if !fs.existsSync(res.locals.resolved)||fs.statSync(res.locals.resolved).isFile()
       res.render 'markdown'
@@ -129,14 +129,14 @@ exports.register=(app)->
     else
       next()
 
-  app.get '*/README',(req,res,next)->
+  app.get '/browse_README',(req,res,next)->
     res.locals.title="README"
     res.render 'markdown'
       html: converter.makeHtml fs.readFileSync __dirname+'/README','utf8'
       file: null
 
 
-  app.post '*/upload',(req,res,next)->
+  app.post '*/browse_upload',(req,res,next)->
     if !res.locals.isEditor
       res.statusCode=403
       res.write "Permission denied."
@@ -147,7 +147,7 @@ exports.register=(app)->
     res.end()
 
 
-  app.all '*/login',(req,res,next)->
+  app.all '*/browse_login',(req,res,next)->
     if res.locals.user?
       res.statusCode=302
       res.setHeader 'Location',req.params[0]||'/'
@@ -162,7 +162,7 @@ exports.register=(app)->
     res.write "<script>location.href='#{req.params[0]||'/'}';</script>"
     res.end()
 
-  app.all "*/edit", (req,res)->
+  app.all "*/browse_edit", (req,res)->
     if !res.locals.isEditor
       res.statusCode=403
       res.write "Permission denied."
