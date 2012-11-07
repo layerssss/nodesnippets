@@ -59,7 +59,10 @@ exports.register=(app)->
           precious[key]=[]
       files2=[]
       for file in files
-        stat=fs.statSync res.locals.resolved+'/'+file
+        await fs.stat res.locals.resolved+'/'+file,defer err,stat
+        if err?
+          stat=
+            isFile:->false
         obj=stat
         obj.name=file
         obj.icon='icon-folder-2'
@@ -102,7 +105,6 @@ exports.register=(app)->
         files2.push obj
 
       files=files2.filter (file)->file!=null&&file.name[0]!='.'&&!file.name.match(/~$/)&&!file.isprivate
-      console.log files
 
 
       files=files.sort (a,b)->
