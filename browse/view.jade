@@ -1,97 +1,97 @@
 extends layout
 block content
-	div.source-showcase
-		.row-fluid
+  div.source-showcase
+    .row-fluid
       .span11
         span.pull-left.label.label-info  
           span.source-mode text
         span.source-msg.pull-right
           .alert.alert-error
-    		h2.source-filename
-			.span1
-				.btn-toolbar.pull-right
-					.btn-group
-						a.btn-primary.btn.source-save save
-		pre#editor(styles='')
-		:less
-			#editor{
-				position:fixed;
-				@padding:20px;
-				left:@padding;
-				right:@padding;
-				bottom:@padding;
-				top:@padding+80px;
+        h2.source-filename
+      .span1
+        .btn-toolbar.pull-right
+          .btn-group
+            a.btn-primary.btn.source-save save
+    pre#editor(styles='')
+    :less
+      #editor{
+        position:fixed;
+        @padding:20px;
+        left:@padding;
+        right:@padding;
+        bottom:@padding;
+        top:@padding+80px;
 
-				display:block;
-				
-				margin:0;
-				-moz-box-sizing:padding-box;
-				padding:0;
-				margin:0;
-			}
-		:coffeescript
-			$ ()->
-				if self!=top
-					$('.navbar,.breadcrumb').remove()
-					$('body>.container-fluid').css('margin-top','0')
-					$('#editor').css('top',Number($('#editor').css('top').replace(/px$/,''))-110)
-					$('body').css('background-color','whiteSmoke')
-				filename=location.href.substring(0,location.href.lastIndexOf('/'))
-				loadFile=(data)->
-					$('.source-filename').text(filename).attr('data-filename',filename)
-					source=$('.source-showcase')
-					source.show()
-					editor = ace.edit("editor")
-					session=editor.getSession()
+        display:block;
+        
+        margin:0;
+        -moz-box-sizing:padding-box;
+        padding:0;
+        margin:0;
+      }
+    :coffeescript
+      $ ()->
+        if self!=top
+          $('.navbar,.breadcrumb').remove()
+          $('body>.container-fluid').css('margin-top','0')
+          $('#editor').css('top',Number($('#editor').css('top').replace(/px$/,''))-110)
+          $('body').css('background-color','whiteSmoke')
+        filename=location.href.substring(0,location.href.lastIndexOf('/'))
+        loadFile=(data)->
+          $('.source-filename').text(filename).attr('data-filename',filename)
+          source=$('.source-showcase')
+          source.show()
+          editor = ace.edit("editor")
+          session=editor.getSession()
 
-					editor.setTheme("ace/theme/twilight");
+          editor.setTheme("ace/theme/twilight");
 
-					mode=filename
-					mode=mode.substring(mode.lastIndexOf('/')+1)
-					mode=mode.substring(mode.lastIndexOf('.')+1)
-					modes=
-						js:'javascript'
-						iced:'coffee'
-						README:'markdown'
-						md:'markdown'
-						cs:'csharp'
-					mode=modes[mode]||mode
-					$('.source-mode').text mode
-					session.setValue ''
-					session.setMode("ace/mode/"+mode);
-					session.setValue data
-					func=()->
-						$.ajax
-							url:filename+'/browse_edit'
-							dataType:'text'
-							success:()->
-								$('.source-showcase .btn').removeClass 'disabled'
-								$('.source-msg').hide()
-								setTimeout func,300
-							error:(xhr)->
-								$('.source-showcase .btn').addClass 'disabled'
-								$('.source-msg').show().children().text xhr.responseText
-								setTimeout func,300
-					func()
-				$.ajax
-					url:filename+'?_t='+Math.floor(Math.random()*1000)
-					dataType:'text'
-					success:(data)->
-						loadFile(data)
-					error:(data)->
-						loadFile('')
-				$('.source-save').click ()->
-					filename=$(this).closest('.source-showcase').find('.source-filename').attr('data-filename')
-					editor = ace.edit("editor")
-					session=editor.getSession()
-					data=session.getValue()
-					$(this).addClass('disabled');
-					$.ajax
-						url:filename+'/browse_edit'
-						type:'post'
-						data:
-							content:data
-						dateType:'text'
-						success:()->
-							$('.source-showcase .btn').removeClass('disabled');
-					return false
+          mode=filename
+          mode=mode.substring(mode.lastIndexOf('/')+1)
+          mode=mode.substring(mode.lastIndexOf('.')+1)
+          modes=
+            js:'javascript'
+            iced:'coffee'
+            README:'markdown'
+            md:'markdown'
+            cs:'csharp'
+          mode=modes[mode]||mode
+          $('.source-mode').text mode
+          session.setValue ''
+          session.setMode("ace/mode/"+mode);
+          session.setValue data
+          func=()->
+            $.ajax
+              url:filename+'/browse_edit'
+              dataType:'text'
+              success:()->
+                $('.source-showcase .btn').removeClass 'disabled'
+                $('.source-msg').hide()
+                setTimeout func,300
+              error:(xhr)->
+                $('.source-showcase .btn').addClass 'disabled'
+                $('.source-msg').show().children().text xhr.responseText
+                setTimeout func,300
+          func()
+        $.ajax
+          url:filename+'?_t='+Math.floor(Math.random()*1000)
+          dataType:'text'
+          success:(data)->
+            loadFile(data)
+          error:(data)->
+            loadFile('')
+        $('.source-save').click ()->
+          filename=$(this).closest('.source-showcase').find('.source-filename').attr('data-filename')
+          editor = ace.edit("editor")
+          session=editor.getSession()
+          data=session.getValue()
+          $(this).addClass('disabled');
+          $.ajax
+            url:filename+'/browse_edit'
+            type:'post'
+            data:
+              content:data
+            dateType:'text'
+            success:()->
+              $('.source-showcase .btn').removeClass('disabled');
+          return false
