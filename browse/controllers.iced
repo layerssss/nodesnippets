@@ -160,7 +160,7 @@ exports.register=(app)->
       res.write "<script>location.href='#{req.params[0]||'/'}';</script>"
     res.end()
 
-  app.all '*/logout',(req,res,next)->
+  app.all '*/browse_logout',(req,res,next)->
     res.statusCode=401
     res.write "<script>location.href='#{req.params[0]||'/'}';</script>"
     res.end()
