@@ -45,3 +45,4 @@ app.get "*.json/[^.]+", (req, res, next) ->
 
 app.listen app.cfg.port, ->
   console.log "Express server listening"
+  console.log app.cfg

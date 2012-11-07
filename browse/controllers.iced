@@ -13,12 +13,11 @@ exports.register=(app)->
   try
     config=jsyaml.load fs.readFileSync app.cfg.root+'/.browse.config.yaml','utf8'
   catch e
-
+  console.log config
   app.all "*",(req,res,next)->
     res.locals.path=req.path.substring 0,req.path.lastIndexOf('/')+1
-    res.locals.resolved=app.cfg.root+ res.locals.path.replace /\/$/,''
+    res.locals.resolved=path.resolve app.cfg.root+ res.locals.path.replace(/\/$/,'')
     res.locals.address=req.headers['x-forwarded-for']||req.connection.remoteAddress
-
 
 
 
@@ -36,22 +35,24 @@ exports.register=(app)->
     while p.length>=app.cfg.root.length&&!res.locals.isEditor
       await fs.readFile p+'/.editors','utf8',defer err,editors
       res.locals.isEditor=(!err?&&(editors.match(res.locals.address)||(res.locals.user?&&editors.match(res.locals.user.username))))#||res.locals.address=='127.0.0.1'
+      if p==path.dirname p
+        break
       p=path.dirname p
     next()
 
   preciousKeys=['private','bigicon']
   propertyKeys=['icon','name']
-  app.all "*/",(req,res,next)->
+  app.get "*/",(req,res,next)->
+    
     res.locals.title="Browse - #{res.locals.path}"
     if !fs.existsSync(res.locals.resolved)||fs.statSync(res.locals.resolved).isFile()
       res.render 'view'
         title: "View - #{res.locals.path}"
     else
       await fs.readdir res.locals.resolved,defer(error,files)
-
       precious={}
       for key in preciousKeys
-        await fs.readFile res.locals.resolved+"/.#{key}s",'utf8',defer err,precious[key]
+        await fs.readFile res.locals.resolved+"#{path.sep}.#{key}s",'utf8',defer err,precious[key]
         if precious[key]?
           precious[key]=precious[key].split '\n'
         else
