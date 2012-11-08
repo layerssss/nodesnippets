@@ -84,7 +84,7 @@ exports.register=(app)->
           if ext in ['.txt','.log','.config','.php','.rb','.jade','.aspx','.java','.cs','.c']
             obj.link="#{file}/"
           if ext in ['.md','.markdown'] or file.toLowerCase() in ['readme','readme.txt']
-            obj.icon='icon-file-2'
+            obj.icon='icon-newspaper'
             obj.link="#{file}/browse_markdown"
         else
           for k in propertyKeys
