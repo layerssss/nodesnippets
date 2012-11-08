@@ -108,10 +108,6 @@ exports.register=(app)->
 
 
       files=files.sort (a,b)->
-        if a.isFile()&&b.isDirectory()
-          return 1
-        if a.isDirectory&&b.isFile()
-          return -1
         if a.name<b.name
           return -1
         if a.name==b.name
