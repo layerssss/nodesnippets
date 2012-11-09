@@ -9,6 +9,7 @@ defaultConfig=
   users:[]
 
 exports.register=(app)->
+  converter=new showdown.converter()
   config=defaultConfig
   try
     config=jsyaml.load fs.readFileSync app.cfg.root+'/.browse.config.yaml','utf8'
@@ -42,97 +43,90 @@ exports.register=(app)->
 
   preciousKeys=['private','bigicon']
   propertyKeys=['icon','name']
+  readmeFiles=['README','README.md','README.txt','README.markdown','Readme','Readme.md','Readme.txt','Readme.markdown']
   app.get "*/",(req,res,next)->
     
     res.locals.title="Browse - #{res.locals.path}"
-    if !fs.existsSync(res.locals.resolved)||fs.statSync(res.locals.resolved).isFile()
-      res.render 'view'
-        title: "View - #{res.locals.path}"
-    else
-      await fs.readdir res.locals.resolved,defer(error,files)
-      precious={}
-      for key in preciousKeys
-        await fs.readFile res.locals.resolved+"#{path.sep}.#{key}s",'utf8',defer err,precious[key]
-        if precious[key]?
-          precious[key]=precious[key].split '\n'
-        else
-          precious[key]=[]
-      files2=[]
-      for file in files
-        await fs.stat res.locals.resolved+'/'+file,defer err,stat
-        if err?
-          stat=
-            isFile:->false
-        obj=stat
-        obj.name=file
-        obj.icon='icon-folder-2'
-        obj.link=file
+    await fs.readdir res.locals.resolved,defer(error,files)
+    precious={}
+    for key in preciousKeys
+      await fs.readFile res.locals.resolved+"#{path.sep}.#{key}s",'utf8',defer err,precious[key]
+      if precious[key]?
+        precious[key]=precious[key].split '\n'
+      else
+        precious[key]=[]
+    files2=[]
+    for file in files
+      await fs.stat res.locals.resolved+path.sep+file,defer err,stat
+      if err?
+        stat=
+          isFile:->false
+      obj=stat
+      obj.name=file
+      obj.icon='icon-folder-2'
+      obj.link=file
 
-        if obj.isFile()
-          obj.icon='icon-paper'
-          ext=path.extname file
-          if ext in ['.yaml','.xml']
-            obj.icon='icon-file-xml'
-            obj.link="#{file}/"
-          if ext in ['.html','.htm']
-            obj.icon='icon-html5-2'
-          if ext in ['.gz','.tar','.rar','.zip','.msi','.pkg','.exe','.deb']
-            obj.icon='icon-file-zip'
-          if ext in ['.sass','.css','.less','.coffee','.iced','.js','.json']
-            obj.icon='icon-file-css'
-            obj.link="#{file}/"
-          if ext in ['.txt','.log','.config','.php','.rb','.jade','.aspx','.java','.cs','.c']
-            obj.link="#{file}/"
-          if ext in ['.md','.markdown'] or file.toLowerCase() in ['readme','readme.txt']
-            obj.icon='icon-newspaper'
-            obj.link="#{file}/browse_markdown"
-        else
-          for k in propertyKeys
-            await fs.readFile res.locals.resolved+path.sep+file+path.sep+".#{k}",'utf8',defer err,v
-            if v?
-              obj[k]=v
-          obj.link+='/'
-
-
-        for key,list of precious
-          obj["is#{key}"]=false
-          for line in list
-            matching=file.match(new RegExp(line.trim()))
-            if matching?&&matching[0].length==file.length
-              obj["is#{key}"]=true
+      if obj.isFile()
+        if file in readmeFiles
+          await fs.readFile res.locals.resolved+path.sep+file,'utf8',defer err,README
+          if !err?
+            res.locals.basename=file
+            res.locals.markdown=converter.makeHtml README
+        obj.icon='icon-paper'
+        ext=path.extname file
+        if ext in ['.yaml','.xml']
+          obj.icon='icon-file-xml'
+          obj.link="#{file}/"
+        if ext in ['.html','.htm']
+          obj.icon='icon-html5-2'
+        if ext in ['.gz','.tar','.rar','.zip','.msi','.pkg','.exe','.deb']
+          obj.icon='icon-file-zip'
+        if ext in ['.sass','.css','.less','.coffee','.iced','.js','.json']
+          obj.icon='icon-file-css'
+          obj.link="#{file}.view"
+        if ext in ['.txt','.log','.config','.php','.rb','.jade','.aspx','.java','.cs','.c']
+          obj.link="#{file}.view"
+        if ext in ['.md','.markdown'] or file.toLowerCase() in ['readme','readme.txt']
+          obj.icon='icon-newspaper'
+          obj.link="#{file}.markdown"
+      else
+        for k in propertyKeys
+          await fs.readFile res.locals.resolved+path.sep+file+path.sep+".#{k}",'utf8',defer err,v
+          if v?
+            obj[k]=v
+        obj.link+='/'
 
 
-        files2.push obj
+      for key,list of precious
+        obj["is#{key}"]=false
+        for line in list
+          matching=file.match(new RegExp(line.trim()))
+          if matching?&&matching[0].length==file.length
+            obj["is#{key}"]=true
 
-      files=files2.filter (file)->file!=null&&file.name[0]!='.'&&!file.name.match(/~$/)&&!file.isprivate
+
+      files2.push obj
+
+    files=files2.filter (file)->file!=null&&file.name[0]!='.'&&!file.name.match(/~$/)&&!file.isprivate
 
 
-      files=files.sort (a,b)->
-        if a.name<b.name
-          return -1
-        if a.name==b.name
-          return 0
-        return 1
-      res.render 'index',
-        title: "Browse - #{res.locals.path}"
-        files:files
+    files=files.sort (a,b)->
+      if a.name<b.name
+        return -1
+      if a.name==b.name
+        return 0
+      return 1
+    res.render 'index',
+      title: "Browse - #{res.locals.path}"
+      files:files
 
   
-  converter=new showdown.converter()
-  app.get '*/browse_markdown',(req,res,next)->
-    res.locals.title="Markdown - #{res.locals.path}"
-    if !fs.existsSync(res.locals.resolved)||fs.statSync(res.locals.resolved).isFile()
-      res.render 'markdown'
-        html: converter.makeHtml fs.readFileSync res.locals.resolved,'utf8'
-        file: path.basename res.locals.resolved
-    else
-      next()
 
   app.get '/browse_README',(req,res,next)->
     res.locals.title="README"
     res.render 'markdown'
-      html: converter.makeHtml fs.readFileSync __dirname+'/README','utf8'
-      file: null
+      markdown: converter.makeHtml fs.readFileSync __dirname+'/README','utf8'
+      basename: 'README'
 
 
   app.post '*/browse_upload',(req,res,next)->
@@ -161,7 +155,19 @@ exports.register=(app)->
     res.write "<script>location.href='#{req.params[0]||'/'}';</script>"
     res.end()
 
-  app.all "*/browse_edit", (req,res)->
+  app.get '*.markdown',(req,res,next)->
+    res.locals.basename=path.basename req.params[0]
+    res.locals.title="Markdown - #{res.locals.path}"
+    if !fs.existsSync(res.locals.resolved+'/'+res.locals.basename)||fs.statSync(res.locals.resolved+'/'+res.locals.basename).isFile()
+      res.render 'markdown'
+        markdown: converter.makeHtml fs.readFileSync res.locals.resolved+'/'+res.locals.basename,'utf8'
+    else
+      next()
+  app.get '*.view',(req,res)->
+    res.locals.basename=path.basename req.params[0]
+    res.render 'view'
+      title: "View - #{res.locals.path}"
+  app.all "*.edit", (req,res)->
     if !res.locals.isEditor
       res.statusCode=403
       res.write "Permission denied."

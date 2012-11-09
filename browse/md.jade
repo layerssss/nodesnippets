@@ -1,0 +1,43 @@
+div.markdown.well
+  a.page-header.title(href=basename+'.markdown',style='text-align:right;')=basename
+  .content(class=markdown.match(/<a href=".*">NEXT<\/a>/)?'slideshow':'')!=markdown
+  :less
+    .slideshow{
+      position:relative;
+      >*:not(:first-child){
+        opacity:0;
+        &:hover{
+          opacity:0.2;
+        }
+        &.shown{
+          opacity:1;
+        }
+      }
+    }
+  :coffeescript
+    $(document).on 'click','.slideshow>*',()->
+      $(this).prevAll().addClass 'shown'
+      $(this).addClass 'shown'
+      $(this).nextAll().removeClass 'shown'
+    $(window).keypress (e)->
+      if $('.slideshow').length==0
+        return
+      next=$('.slideshow').children(':not(:first-child):not(.shown)').eq 0
+      if e.keyCode==39
+        if next.length
+          next.addClass 'shown'
+          if next.next().length
+            $('html,body').animate
+              scrollTop:next.next().offset().top-$(window).height()
+          else
+            $('html,body').animate
+              scrollTop:$('.slideshow').offset().top+$('.slideshow').height()-$(window).height()
+        else
+          location.href=$('.slideshow').children(':last-child').find('a').attr 'href'
+      if e.keyCode==37
+        if next.length
+          next.prev().removeClass 'shown'
+          $('html,body').animate
+            scrollTop:next.prev().offset().top-$(window).height()
+        else
+          $('.slideshow').children(':last-child').removeClass 'shown'

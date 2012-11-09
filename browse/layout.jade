@@ -9,8 +9,10 @@ html
     script(src='/js/jquery.js')
     script(src='/js/ace/ace.js')
     script(src='/js/bootstrap.js')
-    script(src='/js/showdown.js')
     :less
+      body{
+        padding-top:50px;
+      }
       [class^="icon-"],[class*=" icon-"]{
         display:inline;
         margin-right:0.2em;
@@ -23,39 +25,52 @@ html
       a:hover{
         text-decoration:none;
       }
-  body(style='padding-top:50px;')
+    link(rel='stylesheet',href='/css/bootstrap-responsive.css')
+  body(style='')
     .container-fluid
       .navbar.navbar-fixed-top
         .navbar-inner
           .container-fluid
-            ul.nav#nav
-            ul.nav.pull-right
-              if typeof(user)!='undefined'
-                li
-                  a(href='browse_README')
-                    i.icon-help
-                    |README
-                li
-                  a(href='#')
-                    i.icon-user
-                    =user.username
-                li
-                  a(href='browse_logout')
-                    i.icon-locked
-                    |logout
-              else
-                li
-                  a(href='browse_login')
-                    i.icon-key
-                    |login
+            button.btn.btn-navbar(data-target=".nav-collapse",data-toggle="collapse",type="button")
+              span.icon-bar
+              span.icon-bar
+              span.icon-bar
+            div.nav-collapse.collapse
+              ul.nav#nav
+              ul.nav.pull-right
+                if typeof(user)!='undefined'
+                  li
+                    a(href='browse_README')
+                      i.icon-help
+                      |README
+                  li
+                    a(href='#')
+                      i.icon-user
+                      =user.username
+                  li
+                    a(href='browse_logout')
+                      i.icon-locked
+                      |logout
+                else
+                  li
+                    a(href='browse_login')
+                      i.icon-key
+                      |login
       block content
       :coffeescript
+        $('[title]').tooltip
+          placement:'right'
         [dummy,protocal,segs]=location.href.match /(https?:\/\/)([^\?#]*)/
         segs=segs.substring(0,segs.lastIndexOf('/')).split '/'
         for seg,i in segs
-          console.log segs
           if seg.length
             if !i
-              $('<a class="brand" href="'+protocal+seg+'"><i class="icon-home-2"/>'+seg+'</a>').insertBefore('#nav')
+              $('<a class="brand" href="'+protocal+seg+'"><i class="icon-home-2"/>'+seg+'</a>').insertBefore('.nav-collapse')
             else
               $('<li><a href="'+protocal+segs.slice(0,i+1).join('/')+'"><i class="icon-folder-2"/>'+seg+'</a><li>').appendTo('#nav')
+
+
+
+
+
+

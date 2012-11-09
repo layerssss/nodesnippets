@@ -1,30 +1,38 @@
 extends layout
 block content
   div.source-showcase
-    .row-fluid
-      .span11
-        span.pull-left.label.label-info  
+    .pull-right
+      span.source-msg
+        span.alert.alert-error
+      a.btn-primary.btn.source-save save
+    .pull-left
+      span.alert.alert-info
+        span.label.label-info  
           span.source-mode text
-        span.source-msg.pull-right
-          .alert.alert-error
-        h2.source-filename
-      .span1
-        .btn-toolbar.pull-right
-          .btn-group
-            a.btn-primary.btn.source-save save
+        span.source-filename
     pre#editor(styles='')
     :less
-      #editor{
+      .source-showcase{
         position:fixed;
-        @padding:20px;
+        @padding:10px;
         left:@padding;
         right:@padding;
         bottom:@padding;
-        top:@padding+80px;
+        top:@padding+40px;
 
         display:block;
         
         margin:0;
+        -moz-box-sizing:padding-box;
+        padding:0;
+        margin:0;
+      }
+      #editor{
+        position:absolute;
+        top:40px;
+        bottom:0;
+        left:0;
+        right:0;
         -moz-box-sizing:padding-box;
         padding:0;
         margin:0;
@@ -36,7 +44,7 @@ block content
           $('body>.container-fluid').css('margin-top','0')
           $('#editor').css('top',Number($('#editor').css('top').replace(/px$/,''))-110)
           $('body').css('background-color','whiteSmoke')
-        filename=location.href.substring(0,location.href.lastIndexOf('/'))
+        filename=location.href.substring(0,location.href.lastIndexOf('.'))
         loadFile=(data)->
           $('.source-filename').text(filename).attr('data-filename',filename)
           source=$('.source-showcase')
@@ -62,7 +70,7 @@ block content
           session.setValue data
           func=()->
             $.ajax
-              url:filename+'/browse_edit'
+              url:filename+'.edit'
               dataType:'text'
               success:()->
                 $('.source-showcase .btn').removeClass 'disabled'
@@ -87,7 +95,7 @@ block content
           data=session.getValue()
           $(this).addClass('disabled');
           $.ajax
-            url:filename+'/browse_edit'
+            url:filename+'.edit'
             type:'post'
             data:
               content:data
