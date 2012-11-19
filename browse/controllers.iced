@@ -16,7 +16,7 @@ exports.register=(app)->
   catch e
   console.log config
   app.all "*",(req,res,next)->
-    res.locals.path=req.path.substring 0,req.path.lastIndexOf('/')+1
+    res.locals.path=decodeURIComponent req.path.substring 0,req.path.lastIndexOf('/')+1
     res.locals.resolved=path.resolve app.cfg.root+ res.locals.path.replace(/\/$/,'')
     res.locals.address=req.headers['x-forwarded-for']||req.connection.remoteAddress
 
@@ -48,6 +48,9 @@ exports.register=(app)->
     
     res.locals.title="Browse - #{res.locals.path}"
     await fs.readdir res.locals.resolved,defer(error,files)
+    if error?
+      console.error error
+      return next()
     precious={}
     for key in preciousKeys
       await fs.readFile res.locals.resolved+"#{path.sep}.#{key}s",'utf8',defer err,precious[key]
@@ -64,7 +67,7 @@ exports.register=(app)->
       obj=stat
       obj.name=file
       obj.icon='icon-folder-2'
-      obj.link=file
+      obj.link=encodeURIComponent(file)
 
       if obj.isFile()
         if file in readmeFiles
@@ -76,19 +79,19 @@ exports.register=(app)->
         ext=path.extname file
         if ext in ['.yaml','.xml']
           obj.icon='icon-file-xml'
-          obj.link="#{file}/"
+          obj.link="#{encodeURIComponent(file)}/"
         if ext in ['.html','.htm']
           obj.icon='icon-html5-2'
         if ext in ['.gz','.tar','.rar','.zip','.msi','.pkg','.exe','.deb']
           obj.icon='icon-file-zip'
         if ext in ['.sass','.css','.less','.coffee','.iced','.js','.json']
           obj.icon='icon-file-css'
-          obj.link="#{file}.view"
+          obj.link="#{encodeURIComponent(file)}.view"
         if ext in ['.txt','.log','.config','.php','.rb','.jade','.aspx','.java','.cs','.c']
-          obj.link="#{file}.view"
+          obj.link="#{encodeURIComponent(file)}.view"
         if ext in ['.md','.markdown'] or file.toLowerCase() in ['readme','readme.txt']
           obj.icon='icon-newspaper'
-          obj.link="#{file}.markdown"
+          obj.link="#{encodeURIComponent(file)}.markdown"
       else
         for k in propertyKeys
           await fs.readFile res.locals.resolved+path.sep+file+path.sep+".#{k}",'utf8',defer err,v
@@ -108,7 +111,6 @@ exports.register=(app)->
       files2.push obj
 
     files=files2.filter (file)->file!=null&&file.name[0]!='.'&&!file.name.match(/~$/)&&!file.isprivate
-
 
     files=files.sort (a,b)->
       if a.name<b.name

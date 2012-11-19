@@ -65,9 +65,9 @@ html
         for seg,i in segs
           if seg.length
             if !i
-              $('<a class="brand" href="'+protocal+seg+'"><i class="icon-home-2"/>'+seg+'</a>').insertBefore('.nav-collapse')
+              $('<a class="brand" href="'+protocal+seg+'"><i class="icon-home-2"/>'+decodeURIComponent(seg)+'</a>').insertBefore('.nav-collapse')
             else
-              $('<li><a href="'+protocal+segs.slice(0,i+1).join('/')+'/"><i class="icon-folder-2"/>'+seg+'</a><li>').appendTo('#nav')
+              $('<li><a href="'+protocal+segs.slice(0,i+1).join('/')+'/"><i class="icon-folder-2"/>'+decodeURIComponent(seg)+'</a><li>').appendTo('#nav')
 
 
 
