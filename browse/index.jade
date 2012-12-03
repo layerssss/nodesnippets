@@ -7,7 +7,7 @@ block content
         for file in files
           if file.isbigicon
             li.clearfix(style='position:relative;')
-              a.thumbnail(href=file.link,style='width:120px;height:150px;',title=file.name)
+              a.thumbnail(href=file.link,target='_blank',style='width:120px;height:150px;',title=file.name)
                 i(class=file.icon,style='font-size:120px;line-height:1.2;margin:0 auto;')
               span.label.label-info(style='position:absolute;bottom:5px;right:5px;')=file.name
       ul.nav
