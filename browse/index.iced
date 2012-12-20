@@ -12,6 +12,7 @@ app.cfg=
   root: path.resolve(process.argv[3]).replace(/\/$/,'')
 
 app.configure ->
+  app.locals.rootPath = process.env.ROOTPATH||'/'
   app.set "views", __dirname
   app.set "view engine", "jade"
   app.use express.bodyParser()

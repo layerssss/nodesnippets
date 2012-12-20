@@ -4,11 +4,11 @@ html
     meta(http-equiv='Content-Type',content='text/html;charset=UTF-8')
     meta(charset='utf-8')
     title= title
-    link(rel='stylesheet',href='/css/bootstrap.css')
-    link(rel='stylesheet',href='/css/icomoon/style.css')
-    script(src='/js/jquery.js')
-    script(src='/js/ace/ace.js')
-    script(src='/js/bootstrap.js')
+    link(rel='stylesheet',href='#{rootPath}css/bootstrap.css')
+    link(rel='stylesheet',href='#{rootPath}css/icomoon/style.css')
+    script(src='#{rootPath}js/jquery.js')
+    script(src='#{rootPath}js/ace/ace.js')
+    script(src='#{rootPath}js/bootstrap.js')
     :less
       body{
         padding-top:50px;
@@ -25,7 +25,7 @@ html
       a:hover{
         text-decoration:none;
       }
-    link(rel='stylesheet',href='/css/bootstrap-responsive.css')
+    link(rel='stylesheet',href='#{rootPath}css/bootstrap-responsive.css')
   body(style='')
     .container-fluid
       .navbar.navbar-fixed-top
