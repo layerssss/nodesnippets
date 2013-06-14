@@ -126,7 +126,7 @@ exports.register=(app)->
 
   app.get '/browse_README',(req,res,next)->
     res.locals.title="README"
-    res.render 'markdown'
+    res.render 'markdown',
       markdown: converter.makeHtml fs.readFileSync __dirname+'/README','utf8'
       basename: 'README'
 
@@ -161,13 +161,13 @@ exports.register=(app)->
     res.locals.basename=path.basename req.params[0]
     res.locals.title="Markdown - #{res.locals.path}"
     if !fs.existsSync(res.locals.resolved+'/'+res.locals.basename)||fs.statSync(res.locals.resolved+'/'+res.locals.basename).isFile()
-      res.render 'markdown'
+      res.render 'markdown',
         markdown: converter.makeHtml fs.readFileSync res.locals.resolved+'/'+res.locals.basename,'utf8'
     else
       next()
   app.get '*.view',(req,res)->
     res.locals.basename=path.basename req.params[0]
-    res.render 'view'
+    res.render 'view',
       title: "View - #{res.locals.path}"
   app.all "*.edit", (req,res)->
     if !res.locals.isEditor
