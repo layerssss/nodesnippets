@@ -1,0 +1,23 @@
+{
+  "name": "wanalytic",
+  "version": "0.0.0",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "components"
+  ],
+  "dependencies": {
+    "jquery": "~1.8.0",
+    "d3": "~3.2.0",
+    "bootstrap": "~2.3.2",
+    "jquery-ui": "~1.10.3",
+    "select2": "~3.4.0",
+    "highcharts": "~3.0.1",
+    "font-awesome": "~3.2.1",
+    "underscore": "~1.4.4",
+    "icomoon": "latest",
+    "jquery-ui.daterange": "latest",
+    "moment": "~2.0.0",
+    "unchained.coffee": "latest"
+  }
+}

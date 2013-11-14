@@ -1,0 +1,93 @@
+extends _layout
+block sidebar
+
+  #ID-searchPanel
+    input.ID-SearchPanelInput.l9.kc-cs-kc(type='text', size='24', label='查找报告和其他信息', placeholder='查找报告和其他信息', aria-haspopup='false', role='combobox', aria-autocomplete='list')
+  .ID-newNavPanel
+    .lp
+      //- .ar 我的资料
+      for group, key in classifications_groups
+        dl.hc
+          dt.ID-menu-item(data-toggle='collapse',data-target='#cgroup#{escape(key).replace(/%/g,"")}')
+            span.mb
+            span=key
+          dd
+            ul.ID-menu-block.IC.collapse(id='cgroup#{escape(key).replace(/%/g,"")}',class=classification.group==key?'in':undefined)
+              for classification in group
+                li(class=classification.id==cid?'active':undefined)
+                  a(href=getStatsUrl({cid:classification.id}))=classification.name
+  :stylus
+    .ID-newNavPanel li.active
+      background-color: red;
+  script.
+    var querystring = {
+      stringify: function(obj){
+        var buf = [];
+        for(key in obj){
+          buf.push('&');
+          buf.push(key);
+          buf.push('=')
+          buf.push(encodeURIComponent(obj[key]));
+        }
+        return buf.join('');
+      }
+    }
+    var metrics = !{JSON.stringify(metrics)};
+    var metric1 = !{JSON.stringify(metric1)};
+    var metric2 = !{JSON.stringify(metric2)};
+    var m1index = !{mids.indexOf(m1id)};
+    var m2index = !{mids.indexOf(m2id)};
+    var classification = !{JSON.stringify(classification)};
+    var types = !{JSON.stringify(types)};
+    var all = !{JSON.stringify(all)};
+    var rest = !{JSON.stringify(rest)};
+
+    var rs = {
+      locals:{
+        query: !{JSON.stringify(query)},
+        site: !{JSON.stringify(site)}
+      },
+      getStatsUrl: !{String(getStatsUrl)}
+    };
+  script(src='/scripts/stats.js')
+block content
+  //- .daterange
+  ul.nav.nav-tabs(style='float: none;')
+    li(class=g==0?'active':undefined)
+      a(href=getStatsUrl({g: 0}))
+        i.icon-stats
+    li(class=g==1?'active':undefined)
+      a(href=getStatsUrl({g: 1}))
+        i.icon-pie
+    li(class=g==2?'active':undefined)
+      a(href=getStatsUrl({g: 2}))
+        i.icon-bars
+    li(class=g==3?'active':undefined)
+      a(href=getStatsUrl({g: 3}))
+        i.icon-connection
+    li(class=g==4?'active':undefined)
+      a(href=getStatsUrl({g: 4}))
+        i.icon-pen
+  if g==0
+    .graph_time
+  if g==1
+    .graph_pie
+  if g==2
+    .graph_bars
+  if g==3
+    .graph_time_percentage
+  if g==4
+    .graph_weeks
+      svg(width="2530",height="830",viewBox="0 0 2530 830",preserveAspectRatio="xMidYMid meet",style="width: 100%; height: 100%;")
+  table.table
+    thead
+      tr
+        th=classification.name
+        for m in metrics
+          th=m.name
+    tbody
+      for type in [all].concat(types).concat([rest])
+        tr
+          td=type.name
+          for m,i in metrics
+            td=type.type.sums[i]||0

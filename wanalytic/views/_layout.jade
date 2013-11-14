@@ -1,0 +1,99 @@
+extends _html
+block body
+  .top
+    ul.qb.nb
+      li
+        a(href='/admin/') 管理
+      li
+        a(href='/help/') 帮助
+    .home
+      a(href='/')
+    .ef
+      span.line
+      .app_icon
+      .action_open(data-toggle='collapse',data-target='.account_list')
+        p
+          | http://www.ctrip.com - http://www.ctrip.com
+        p.account_2
+          | www.ctrip.com  [默认]
+      .account_list.collapse
+        .I5
+          .floatRight
+            input.ID-accountListFilter(type='text', label='查找帐户与配置文件', placeholder='查找帐户与配置文件')
+          .action_gohome 帐户列表
+        .TO
+          .account_m
+            .action_collapse
+              .jxb 1个网路媒体资源
+              .se
+                span.account_name_1 www.ctrip.com
+    ul.nb.nav
+      li
+        a(href='/site#{site.id}/stats/') 数据报告
+      li
+        a(href='/site#{site.id}/insite/') 应用内分析
+  .main
+    .sidebar
+      block sidebar
+        #ID-searchPanel
+          input.ID-SearchPanelInput.l9.kc-cs-kc(type='text', size='24', label='查找报告和其他信息', placeholder='查找报告和其他信息', aria-haspopup='false', role='combobox', aria-autocomplete='list')
+        .ID-newNavPanel
+          .lp
+            .ar 我的资料
+            dl.hc
+              dt.ID-menu-item
+                span.mb
+                span 信息中心
+              dd
+                ul.ID-menu-block.IC
+                  li
+                    a(href='#') 我的信息中心
+                  li
+                    a(href='#') 新信息中心
+            dl.hc
+              dt.ID-menu-item
+                span.mb
+                span 快捷方式
+              dd
+                ul.ID-menu-block.IC
+                  li
+                    a(href='#') 概览
+    .view
+      block content
+        .view_top
+          h2 标题
+          input(type='date', name='data')
+        h3 234342人访问过此网站
+        .sk
+          .db
+            .primary
+              .buttonText 访问次数
+            .pri_list(style='display: none;')
+              ul
+                li 1
+                li 1
+                li 1
+                li 1
+            span 对比
+            .primary
+              .buttonText 平均访问持续时间
+            .pri_list(style='display: none;')
+              ul
+                li 1
+                li 1
+                li 1
+                li 1
+          table.tb
+            tbody
+              tr
+                th 访问者类型
+                th 访问次数
+                th 每次访问的网页浏览量
+              th 平均访问持续时间
+              th 平均持续时间
+            tr
+              td 1
+              td 1
+              td 1
+              td 1
+              td 1

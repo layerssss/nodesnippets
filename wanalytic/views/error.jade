@@ -1,0 +1,12 @@
+extends _html
+block body
+  .modal
+    .modal-header
+      .close ×
+      h3 错误
+    .modal-body
+      .alert.alert-error
+        p=message
+    .modal-footer
+      a.btn.btn-primary(href='#',onclick='history.go(-1);return false;') 后退
+
