@@ -13,15 +13,15 @@
     "node": ">=0.8.1"
   },
   "dependencies": {
-    "coffee-script":"latest",
-    "connect-gzip":"latest",
-    "express":"latest",
+    "coffee-script":"*",
+    "connect-gzip":"*",
+    "express":"~3",
     "http-proxy":"latest",
     "iced-coffee-script":"latest",
-    "jade":"latest",
+    "jade":"~0",
     "js-yaml":"latest",
-    "less":"latest",
+    "less":"~1",
     "mocha":"latest",
-    "showdown":"latest"
+    "showdown":"~0"
   }
 }
