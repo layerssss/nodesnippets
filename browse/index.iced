@@ -44,6 +44,7 @@ app.get "*.json/[^.]+", (req, res, next) ->
   res.setHeader "Content-Type", "text/json; charset=utf8"
   next()
 
-app.listen app.cfg.port, ->
+app.listen app.cfg.port, 'localhost', ->
   console.log "Express server listening"
   console.log app.cfg
+
